@@ -27,6 +27,6 @@ resource "aws_iam_role_policy_attachment" "ssm_attach" {
 
 
 resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "self-healing-ec2-profile"
+  name_prefix = "self-healing-ec2-profile-"
   role = aws_iam_role.ec2_role.name
 }
