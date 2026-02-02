@@ -1,5 +1,5 @@
 resource "aws_iam_role" "ec2_role" {
-  name = "self-healing-ec2-role"
+  name_prefix = "self-healing-ec2-role-"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
