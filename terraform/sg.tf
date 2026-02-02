@@ -1,5 +1,6 @@
 resource "aws_security_group" "web_sg" {
-  name        = "self-healing-web-sg"
+  name_prefix = "web-sg-"
+
   description = "Security group for self-healing EC2"
   vpc_id      = data.aws_vpc.default.id
 
