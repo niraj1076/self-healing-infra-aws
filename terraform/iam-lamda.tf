@@ -1,5 +1,5 @@
 resource "aws_iam_role" "lamda_role" {
-  name = "lambda-auto-remediation-role"
+  name_prefix = "lambda-auto-remediation-policy-"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -17,7 +17,7 @@ resource "aws_iam_role" "lamda_role" {
 
 
 resource "aws_iam_policy" "lambda_policy" {
-  name = "lambda-auto-remediation-policy"
+  name_prefix = "lambda-auto-remediation-policy-"
 
   policy = jsonencode({
     Version = "2012-10-17"
