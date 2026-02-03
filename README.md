@@ -35,7 +35,6 @@ The system continuously monitors EC2 health using **Amazon CloudWatch** and auto
 ## 📂 Repository Structure
 
 self-healing-infra-aws/
-│
 ├── terraform/
 │ ├── provider.tf
 │ ├── variables.tf
@@ -44,7 +43,7 @@ self-healing-infra-aws/
 │ ├── iam.tf
 │ ├── cloudwatch.tf
 │ ├── eventbridge.tf
-│ ├── lambda.tf
+│ └── lambda.tf
 │
 ├── lambda/
 │ └── auto_remediation.py
@@ -55,7 +54,6 @@ self-healing-infra-aws/
 │
 ├── README.md
 └── self-healing-infra-aws-architecture.png
-
 
 ---
 
