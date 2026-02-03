@@ -33,7 +33,7 @@ The system continuously monitors EC2 health using **Amazon CloudWatch** and auto
 ---
 
 ## 📂 Repository Structure
-
+```
 self-healing-infra-aws/
 ├── terraform/
 │ ├── provider.tf
@@ -55,33 +55,9 @@ self-healing-infra-aws/
 ├── README.md
 └── self-healing-infra-aws-architecture.png
 
-
+```
 ---
 
-### ✅ Why this works
-- Uses **triple backticks** → GitHub renders it as a tree
-- Proper indentation using `│ ├ └`
-- Nested folders appear correctly
-- Matches **your real repo exactly**
-
----
-
-### ⚠️ Common Mistakes to Avoid
-❌ Don’t paste without ```  
-❌ Don’t use spaces instead of tree symbols  
-❌ Don’t mix markdown bullets with directory trees  
-
----
-
-### 🧠 Pro Tip (Senior-Level Touch)
-If you want, you can add **comments** later:
-
-├── terraform/ # Infrastructure as Code
-├── lambda/ # Auto-remediation logic
-├── .github/ # CI/CD workflows
-
-
----
 
 ## 🔹 Part 1: Architecture & Failure Design
 
