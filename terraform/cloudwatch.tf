@@ -7,7 +7,7 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu" {
   namespace = "AWS/EC2"
   period = 60
   statistic = "Average"
-  threshold = 60
+  threshold = 85
 
   alarm_description = "Alarm when EC2 cpu exceeds 60%"
   alarm_actions = [] #lamda will be added in 4 part
