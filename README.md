@@ -1,3 +1,61 @@
+# 🛠️ Self-Healing Infrastructure on AWS (Terraform)
+
+This project demonstrates a **self-healing infrastructure on AWS**, built using **Terraform** and automated with **GitHub Actions**.  
+The system continuously monitors EC2 health using **Amazon CloudWatch** and automatically recovers from failures using an **event-driven remediation flow with EventBridge and Lambda** — without any manual intervention.
+
+---
+
+## 📌 Project Status
+
+- ✅ Part 1: Architecture & Failure Design
+- ✅ Part 2: Base Infrastructure (Terraform)
+- ✅ Part 3: Monitoring & Health Detection
+- ✅ Part 4: Auto-Remediation (Self-Healing)
+- ✅ Part 5: CI/CD for Infrastructure (GitHub Actions)
+- ⏸️ Part 6: Application CI/CD (Planned – intentionally separated)
+
+---
+
+## 🧱 Architecture Diagram
+
+![Self-Healing Infrastructure](./self-healing-infra-aws-architecture.png)
+
+### Architecture Flow
+1. Infrastructure is provisioned using **Terraform** via **GitHub Actions**
+2. An **EC2 instance** runs inside the default VPC
+3. **CloudWatch** monitors EC2 CPU utilization
+4. A **CloudWatch Alarm** triggers when CPU exceeds 85%
+5. The alarm sends an event to **EventBridge**
+6. **EventBridge** invokes a **Lambda function**
+7. **Lambda** automatically remediates the issue by rebooting the EC2 instance  
+👉 Result: **Self-healing with no manual intervention**
+
+---
+
+## 📂 Repository Structure
+
+self-healing-infra-aws/
+│
+├── terraform/
+│ ├── provider.tf
+│ ├── variables.tf
+│ ├── ec2.tf
+│ ├── security_group.tf
+│ ├── iam.tf
+│ ├── cloudwatch.tf
+│ ├── eventbridge.tf
+│ ├── lambda.tf
+│
+├── lambda/
+│ └── auto_remediation.py
+│
+├── .github/
+│ └── workflows/
+│ └── terraform-ci.yml
+│
+├── README.md
+└── self-healing-infra-aws-architecture.png
+
 
 ---
 
