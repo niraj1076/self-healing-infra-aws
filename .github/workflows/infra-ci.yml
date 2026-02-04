@@ -34,6 +34,13 @@ jobs:
       - name: Set my_ip for Terraform
         run: echo "TF_VAR_my_ip=$(curl -s https://checkip.amazonaws.com)" >> $GITHUB_ENV
 
+      - name: Set my_ip from GitHub Secret
+        env:
+         MY_IP: ${{ secrets.MY_LAPTOP_IP }}
+        run: |
+         echo "TF_VAR_my_ip=${MY_IP}" >> $GITHUB_ENV
+
+
 
       - name: Terraform Validate
         if: github.event.inputs.destroy != 'true'
