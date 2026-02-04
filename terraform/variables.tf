@@ -4,8 +4,6 @@ variable "aws-region" {
   default     = "ap-south-1"
 }
 
-
-
 variable "my_ip" {
   description = "my public ip for ssh access"
   type        = string
