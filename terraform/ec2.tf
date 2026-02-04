@@ -27,13 +27,62 @@ resource "aws_instance" "web" {
 
 
   user_data = <<-EOF
-              #!/bin/bash
-              apt update -y
-              apt install -y nginx
-              systemctl start nginx
-              systemctl enable nginc
-              echo "Self-Healing Infrastructure - EC2 Running" > /var/www/html/index.html
-              EOF
+                #!/bin/bash
+                set -e
+
+                # Update system
+                apt update -y
+
+                # Install nginx
+                apt install -y nginx
+
+                # Enable & start nginx
+                systemctl start nginx
+                systemctl enable nginx
+
+                # Create app directory
+                mkdir -p /var/www/html
+                echo "Self-Healing Infrastructure - EC2 Running" > /var/www/html/index.html
+
+                # Create scripts directory
+                mkdir -p /home/ubuntu/scripts
+
+                # Deploy script
+                cat << 'EOT' > /home/ubuntu/scripts/deploy.sh
+                #!/bin/bash
+                rsync -av --delete /home/ubuntu/app/ /var/www/html/
+                EOT
+
+                # Restart script
+                cat << 'EOT' > /home/ubuntu/scripts/restart.sh
+                #!/bin/bash
+                systemctl restart nginx
+                EOT
+
+                # Health check script
+                cat << 'EOT' > /home/ubuntu/scripts/health.sh
+                #!/bin/bash
+                STATUS=$(curl -s -o /dev/null -w "%%{http_code}" http://localhost)
+                if [ "$STATUS" -ne 200 ]; then
+                  exit 1
+                fi
+                EOT
+
+                # Bootstrap script (runs on reboot)
+                cat << 'EOT' > /home/ubuntu/scripts/bootstrap.sh
+                #!/bin/bash
+                /home/ubuntu/scripts/restart.sh
+                /home/ubuntu/scripts/health.sh
+                EOT
+
+                # Permissions
+                chown -R ubuntu:ubuntu /home/ubuntu/scripts
+                chmod +x /home/ubuntu/scripts/*.sh
+
+                # Cron job for reboot
+                (crontab -l 2>/dev/null; echo "@reboot /home/ubuntu/scripts/bootstrap.sh") | crontab -
+                EOF
+
 
   tags = {
     Name = "self-healing-web-ec2"
