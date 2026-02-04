@@ -26,62 +26,45 @@ resource "aws_instance" "web" {
   key_name = "ubuntu"   # 👈 ADD THIS LINE
 
 
-  user_data = <<-EOF
-                #!/bin/bash
-                set -e
+ user_data = <<-EOF
+              #!/bin/bash
+              set -euxo pipefail
 
-                # Update system
-                apt update -y
+              exec > /var/log/user-data.log 2>&1
 
-                # Install nginx
-                apt install -y nginx
+              echo "User data started"
 
-                # Enable & start nginx
-                systemctl start nginx
-                systemctl enable nginx
+              # Update & install packages
+              apt update -y
+              apt install -y nginx git curl rsync
 
-                # Create app directory
-                mkdir -p /var/www/html
-                echo "Self-Healing Infrastructure - EC2 Running" > /var/www/html/index.html
+              # Enable & start nginx
+              systemctl enable nginx
+              systemctl start nginx
 
-                # Create scripts directory
-                mkdir -p /home/ubuntu/scripts
+              # Clone GitHub repo
+              cd /home/ubuntu
+              git clone https://github.com/niraj1076/self-healing-infra-aws.git
 
-                # Deploy script
-                cat << 'EOT' > /home/ubuntu/scripts/deploy.sh
-                #!/bin/bash
-                rsync -av --delete /home/ubuntu/app/ /var/www/html/
-                EOT
+              # Create scripts directory
+              mkdir -p /home/ubuntu/scripts
 
-                # Restart script
-                cat << 'EOT' > /home/ubuntu/scripts/restart.sh
-                #!/bin/bash
-                systemctl restart nginx
-                EOT
+              # Copy scripts from repo to runtime location
+              cp self-healing-infra-aws/server/*.sh /home/ubuntu/scripts/
 
-                # Health check script
-                cat << 'EOT' > /home/ubuntu/scripts/health.sh
-                #!/bin/bash
-                STATUS=$(curl -s -o /dev/null -w "%%{http_code}" http://localhost)
-                if [ "$STATUS" -ne 200 ]; then
-                  exit 1
-                fi
-                EOT
+              # Permissions
+              chmod +x /home/ubuntu/scripts/*.sh
+              chown -R ubuntu:ubuntu /home/ubuntu/scripts
 
-                # Bootstrap script (runs on reboot)
-                cat << 'EOT' > /home/ubuntu/scripts/bootstrap.sh
-                #!/bin/bash
-                /home/ubuntu/scripts/restart.sh
-                /home/ubuntu/scripts/health.sh
-                EOT
+              # Bootstrap on reboot (root cron)
+              echo "@reboot bash /home/ubuntu/scripts/bootstrap.sh >> /var/log/bootstrap.log 2>&1" | crontab -
 
-                # Permissions
-                chown -R ubuntu:ubuntu /home/ubuntu/scripts
-                chmod +x /home/ubuntu/scripts/*.sh
+              # Default page (optional)
+              echo "Self-Healing Infrastructure - EC2 Running (GitOps)" > /var/www/html/index.html
 
-                # Cron job for reboot
-                (crontab -l 2>/dev/null; echo "@reboot /home/ubuntu/scripts/bootstrap.sh") | crontab -
-                EOF
+              echo "User data completed"
+              EOF
+
 
 
   tags = {
