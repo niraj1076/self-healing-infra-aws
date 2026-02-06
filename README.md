@@ -148,32 +148,45 @@ Design failure scenarios **before** building infrastructure.
 
 ---
 
-## ⏸️ Part 6: Application CI/CD (Planned)
+---
 
-Application deployment CI/CD is **intentionally separated** from infrastructure CI/CD to maintain clarity and modularity.
+## 🔹 Part 6: Application CI/CD & Health Verification (Completed)
 
-### Planned Scope
-- Application deployment to EC2
-- Service restart automation
-- Health verification
-- Integration with existing self-healing flow
+### Objective
+Automate application deployment on EC2 and integrate it with the existing self-healing infrastructure.
+
+### Implementation Details
+- Application deployment triggered on code changes
+- Deployment handled using shell scripting on EC2
+- Application/service restart automated after deployment
+- Health check performed using HTTP status validation
+- Failure during deployment or health check relies on existing monitoring and remediation flow
+
+### Integration with Self-Healing Flow
+- Application runs on the same EC2 instance monitored by CloudWatch
+- Any abnormal behavior (CPU spike / unresponsive service) is detected automatically
+- CloudWatch Alarm → EventBridge → Lambda remediation remains unchanged
+
+📌 *This completes the full DevOps lifecycle: infrastructure provisioning, deployment automation, monitoring, and self-healing.*
 
 ---
 
 ## 🔐 Security Considerations
 
-- No AWS access keys stored
-- IAM roles used for EC2 and Lambda
-- SSH access restricted to a single IP
-- Least-privilege policies applied
+- No AWS access keys stored in code or CI/CD
+- IAM roles used for EC2 and Lambda instead of credentials
+- SSH access restricted to a single trusted IP
+- Least-privilege IAM policies enforced
+- Deployment automation does not expose secrets
 
 ---
 
 ## 💰 Cost Optimization
 
-- All resources are within AWS Free Tier
-- Event-driven services used (no idle costs)
-- Manual cleanup supported via Terraform destroy
+- Entire project runs within AWS Free Tier limits
+- Event-driven services (Lambda, EventBridge) incur cost only on execution
+- No always-on auxiliary services
+- Resources can be fully cleaned up using `terraform destroy`
 
 ---
 
@@ -182,25 +195,28 @@ Application deployment CI/CD is **intentionally separated** from infrastructure 
 - Terraform (Infrastructure as Code)
 - AWS EC2, IAM, CloudWatch
 - EventBridge & Lambda automation
-- GitHub Actions CI/CD
-- Self-healing & reliability design
-- DevOps & SRE fundamentals
+- GitHub Actions for CI/CD
+- Application deployment automation
+- Monitoring-driven self-healing design
+- DevOps & SRE best practices
 
 ---
 
 ## 🚀 Future Enhancements
 
-- Part 6: Application CI/CD pipeline
-- Multi-instance recovery logic
-- Additional health metrics
-- Remote Terraform state backend
+- Blue/Green or Rolling application deployments
+- Auto Scaling Group integration
+- Additional health metrics and alarms
+- Remote Terraform state using S3 & DynamoDB
+- Notification integration (SNS / Slack)
 
 ---
 
 ## 📎 Conclusion
 
-This project showcases a **real-world self-healing infrastructure pattern** where monitoring, automation, and recovery are tightly integrated using AWS-native services and Infrastructure as Code.
+This project demonstrates a **complete end-to-end DevOps and SRE workflow**, starting from infrastructure provisioning to automated application deployment, continuous monitoring, and self-healing recovery.
 
-It reflects practical DevOps and SRE thinking rather than just service usage.
+By combining Infrastructure as Code, CI/CD automation, and event-driven remediation, the system achieves high reliability with minimal manual intervention.
 
 ---
+
