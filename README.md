@@ -58,165 +58,201 @@ self-healing-infra-aws/
 ```
 ---
 
+Perfect, this makes sense now 👍
+You want a **README that is command-driven**, so **any similar student can clone the repo and follow terminal commands**, and you **do NOT want conceptual Steps 4–7**.
 
-## 🔹 Part 1: Architecture & Failure Design
+Below is a **clean, GitHub-ready README** for **Project 1 – PART 1**, focused only on **practical commands + structure**.
 
-### Objective
-Design failure scenarios **before** building infrastructure.
-
-### Failure Scenarios Considered
-- EC2 CPU spike
-- Application unresponsiveness
-- Manual stress testing
-
-### Design Decisions
-- Detection via **CloudWatch metrics**
-- Event-driven recovery using **EventBridge**
-- Automated remediation using **Lambda**
-
-📌 *This step ensures reliability is designed, not added later.*
+You can **copy–paste this directly**.
 
 ---
 
-## 🔹 Part 2: Base Infrastructure (Terraform)
+# Project 1 – Self-Healing Infrastructure on AWS
 
-### Components Provisioned
-- EC2 instance (Ubuntu 22.04 – Free Tier)
-- Security Group
-  - HTTP (80) → Public
-  - SSH (22) → Restricted to personal IP
-- IAM Role for EC2 (no access keys)
-- Default VPC
-
-### Best Practices Used
-- Infrastructure as Code (IaC)
-- Dynamic AMI lookup
-- Least-privilege IAM policies
-- Variables for reusability
+## PART 1: Project Initialization & Design Setup
 
 ---
 
-## 🔹 Part 3: Monitoring & Health Detection
+## Purpose of This Part
 
-### Monitoring Configuration
-- **CloudWatch Metric:** CPUUtilization
-- **Alarm Threshold:** 85%
-- **Evaluation Periods:** 2
+This part prepares the **project foundation** before any AWS infrastructure is created.
 
-### Validation
-- CPU stress test performed
-- Alarm successfully transitioned to `ALARM` state
-- Logs verified in CloudWatch
+It includes:
 
-📌 *Demonstrates understanding of real monitoring thresholds.*
+* Project directory setup
+* Git repository initialization
+* Documentation structure
+* Version control best practices
 
----
-
-## 🔹 Part 4: Auto-Remediation (Self-Healing Core)
-
-### Automation Flow
-- CloudWatch Alarm → EventBridge Rule
-- EventBridge → Lambda Function
-- Lambda → EC2 Reboot / Service Recovery
-
-### Security
-- Dedicated IAM role for Lambda
-- Only required EC2 and logging permissions
-
-### Outcome
-- Automatic recovery without SSH or manual action
-- Proven self-healing behavior
-
-📌 *This is the core SRE capability of the project.*
+No AWS resources are created in this part.
 
 ---
 
-## 🔹 Part 5: CI/CD for Infrastructure (GitHub Actions)
+## Prerequisites
 
-### Pipeline Capabilities
-- Terraform format check
-- Terraform validate
-- Terraform plan
-- Terraform apply
+Make sure the following are installed on your system:
 
-### Benefits
-- Git-driven infrastructure changes
-- Consistent and repeatable deployments
-- No local dependency on developer machine
+* Git
+* VS Code or any code editor
+* GitHub account
 
-📌 *Demonstrates DevOps best practices for infrastructure automation.*
+Check versions:
 
----
+```bash
+git --version
+```
 
 ---
 
-## 🔹 Part 6: Application CI/CD & Health Verification (Completed)
+## Step 1: Create Project Directory
 
-### Objective
-Automate application deployment on EC2 and integrate it with the existing self-healing infrastructure.
+Create a new directory for the project and move into it:
 
-### Implementation Details
-- Application deployment triggered on code changes
-- Deployment handled using shell scripting on EC2
-- Application/service restart automated after deployment
-- Health check performed using HTTP status validation
-- Failure during deployment or health check relies on existing monitoring and remediation flow
-
-### Integration with Self-Healing Flow
-- Application runs on the same EC2 instance monitored by CloudWatch
-- Any abnormal behavior (CPU spike / unresponsive service) is detected automatically
-- CloudWatch Alarm → EventBridge → Lambda remediation remains unchanged
-
-📌 *This completes the full DevOps lifecycle: infrastructure provisioning, deployment automation, monitoring, and self-healing.*
+```bash
+mkdir self-healing-infra-aws
+cd self-healing-infra-aws
+```
 
 ---
 
-## 🔐 Security Considerations
+## Step 2: Initialize Git Repository
 
-- No AWS access keys stored in code or CI/CD
-- IAM roles used for EC2 and Lambda instead of credentials
-- SSH access restricted to a single trusted IP
-- Least-privilege IAM policies enforced
-- Deployment automation does not expose secrets
+Initialize Git inside the project directory:
 
----
+```bash
+git init
+```
 
-## 💰 Cost Optimization
+Verify repository status:
 
-- Entire project runs within AWS Free Tier limits
-- Event-driven services (Lambda, EventBridge) incur cost only on execution
-- No always-on auxiliary services
-- Resources can be fully cleaned up using `terraform destroy`
+```bash
+git status
+```
 
 ---
 
-## 🧠 Skills Demonstrated
+## Step 3: Create Base Files
 
-- Terraform (Infrastructure as Code)
-- AWS EC2, IAM, CloudWatch
-- EventBridge & Lambda automation
-- GitHub Actions for CI/CD
-- Application deployment automation
-- Monitoring-driven self-healing design
-- DevOps & SRE best practices
+Create the README file:
 
----
+```bash
+touch README.md
+```
 
-## 🚀 Future Enhancements
+(Optional) Create placeholder directories for future parts:
 
-- Blue/Green or Rolling application deployments
-- Auto Scaling Group integration
-- Additional health metrics and alarms
-- Remote Terraform state using S3 & DynamoDB
-- Notification integration (SNS / Slack)
+```bash
+mkdir terraform
+mkdir scripts
+mkdir docs
+```
 
 ---
 
-## 📎 Conclusion
+## Step 4: Open Project in VS Code
 
-This project demonstrates a **complete end-to-end DevOps and SRE workflow**, starting from infrastructure provisioning to automated application deployment, continuous monitoring, and self-healing recovery.
-
-By combining Infrastructure as Code, CI/CD automation, and event-driven remediation, the system achieves high reliability with minimal manual intervention.
+```bash
+code .
+```
 
 ---
 
+## Step 5: Write Initial README Content
+
+Open `README.md` and add a basic header:
+
+```md
+# Self-Healing Infrastructure on AWS
+
+This project demonstrates how to design and implement a self-healing AWS infrastructure using Terraform, CloudWatch, EventBridge, Lambda, and CI/CD pipelines.
+```
+
+Save the file.
+
+---
+
+## Step 6: Create `.gitignore`
+
+Create `.gitignore` file:
+
+```bash
+touch .gitignore
+```
+
+Add the following content:
+
+```gitignore
+.terraform/
+*.tfstate
+*.tfstate.backup
+.env
+```
+
+---
+
+## Step 7: Check Git Status
+
+```bash
+git status
+```
+
+You should see:
+
+* README.md
+* .gitignore
+* directories created
+
+---
+
+## Step 8: First Commit
+
+Stage all files:
+
+```bash
+git add .
+```
+
+Commit changes:
+
+```bash
+git commit -m "Project 1 Part 1: repository initialization"
+```
+
+---
+
+## Step 9: Create GitHub Repository
+
+On GitHub:
+
+* Repository name: `self-healing-infra-aws`
+* Visibility: Public
+* Do NOT add README (already exists)
+
+---
+
+## Step 10: Link Local Repo to GitHub
+
+Replace `<your-username>` with your GitHub username:
+
+```bash
+git branch -M main
+git remote add origin https://github.com/<your-username>/self-healing-infra-aws.git
+git push -u origin main
+```
+
+---
+
+## Final Repository Structure (After PART 1)
+
+```
+self-healing-infra-aws/
+│
+├── README.md
+├── .gitignore
+├── terraform/
+├── scripts/
+└── docs/
+```
+
+---
+ 
