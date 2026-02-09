@@ -1,18 +1,6 @@
-Perfect 👍
-Below is a **single, clean, GitHub-ready README** for your **Self-Healing Infrastructure on AWS** project.
-
-✔ Command-driven
-✔ No step numbers
-✔ Professional format
-✔ **Architecture image INCLUDED**
-✔ Easy for anyone to clone and follow
-✔ Matches your existing repo structure
-
-You can **copy–paste this directly into `README.md`**.
-
 ---
 
-```md
+
 # 🛠️ Self-Healing Infrastructure on AWS (Terraform)
 
 This project demonstrates a **self-healing infrastructure on AWS**, built using **Terraform** and automated with **GitHub Actions**.
@@ -38,16 +26,16 @@ The system continuously monitors EC2 health using **Amazon CloudWatch** and auto
 
 ### Architecture Flow
 
-- Infrastructure is provisioned using **Terraform**
-- Terraform execution is automated via **GitHub Actions**
-- An **EC2 instance** runs inside the default VPC
-- **CloudWatch** monitors EC2 CPU utilization
-- A **CloudWatch Alarm** triggers when CPU exceeds the defined threshold
-- Alarm state changes are sent to **EventBridge**
-- **EventBridge** invokes a **Lambda function**
-- **Lambda** automatically remediates the failure by rebooting the EC2 instance
+- Infrastructure is provisioned using Terraform
+- Terraform execution is automated using GitHub Actions
+- An EC2 instance runs inside the default VPC
+- CloudWatch monitors EC2 CPU utilization
+- A CloudWatch Alarm triggers when CPU crosses the threshold
+- Alarm state changes are sent to EventBridge
+- EventBridge invokes a Lambda function
+- Lambda automatically remediates the issue by rebooting the EC2 instance
 
-Result: **Automatic recovery without human intervention**
+Result: **Automatic recovery with no manual intervention**
 
 ---
 
@@ -79,7 +67,7 @@ self-healing-infra-aws/
 ├── .gitignore
 └── self-healing-infra-aws-architecture.png
 
-````
+```
 
 ---
 
@@ -87,44 +75,37 @@ self-healing-infra-aws/
 
 ## Purpose
 
-This part prepares the **project foundation** before any AWS infrastructure is created.
+Prepare the project foundation before provisioning any AWS resources.
 
-Scope of this part:
-- Project directory setup
-- Git repository initialization
-- Base documentation
-- Version control best practices
+This part focuses on:
+- Repository setup
+- Directory structure
+- Version control
+- Documentation baseline
 
-No AWS resources are provisioned here.
+No AWS resources are created in this part.
 
 ---
 
 ## Local Requirements
 
-Ensure the following tools are installed:
+- Git
+- VS Code or any code editor
+- GitHub account
+
+Verify Git installation:
 
 ```bash
 git --version
 ````
 
-* Git
-* VS Code or any code editor
-* GitHub account
-
 ---
 
 ## Project Initialization
 
-Create and enter the project directory:
-
 ```bash
 mkdir self-healing-infra-aws
 cd self-healing-infra-aws
-```
-
-Initialize Git:
-
-```bash
 git init
 ```
 
@@ -165,8 +146,6 @@ terraform.tfvars
 
 ## Initial Commit and GitHub Setup
 
-Stage and commit:
-
 ```bash
 git add .
 git commit -m "PART 1: project initialization and repository setup"
@@ -192,7 +171,7 @@ git push -u origin main
 
 ## Purpose
 
-Provision the **core AWS infrastructure** required for monitoring and self-healing.
+Provision the core AWS infrastructure required for monitoring and self-healing.
 
 Resources created:
 
@@ -211,7 +190,7 @@ Resources created:
 * Terraform v1.3+
 * Git
 * VS Code
-* OS: Windows (PowerShell or VS Code terminal)
+* OS: Windows (PowerShell / VS Code terminal)
 
 ---
 
@@ -223,7 +202,9 @@ cd terraform
 
 ---
 
-## Provider Configuration (`provider.tf`)
+## Provider Configuration
+
+Create `provider.tf`:
 
 ```hcl
 terraform {
@@ -244,7 +225,9 @@ provider "aws" {
 
 ---
 
-## Variables (`variables.tf`)
+## Variables
+
+Create `variables.tf`:
 
 ```hcl
 variable "aws_region" {
@@ -260,7 +243,9 @@ variable "my_ip" {
 
 ---
 
-## VPC and Subnet Lookup (`vpc.tf`)
+## VPC and Subnet Lookup
+
+Create `vpc.tf`:
 
 ```hcl
 data "aws_vpc" "default" {
@@ -282,7 +267,9 @@ data "aws_subnets" "public_azs" {
 
 ---
 
-## Security Group (`sg.tf`)
+## Security Group
+
+Create `sg.tf`:
 
 ```hcl
 resource "aws_security_group" "web_sg" {
@@ -314,7 +301,9 @@ resource "aws_security_group" "web_sg" {
 
 ---
 
-## IAM Role and Instance Profile (`iam.tf`)
+## IAM Role and Instance Profile
+
+Create `iam.tf`:
 
 ```hcl
 resource "aws_iam_role" "ec2_role" {
@@ -337,11 +326,12 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 
 ---
 
-## EC2 Instance (`ec2.tf`)
+## EC2 Instance
+
+Create `ec2.tf`:
 
 ```hcl
 resource "aws_instance" "web" {
-  ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t2.micro"
   subnet_id              = data.aws_subnets.public_azs.ids[0]
   vpc_security_group_ids = [aws_security_group.web_sg.id]
@@ -393,3 +383,13 @@ git push origin main
 ```
 
 ---
+
+## Project Highlights
+
+* Infrastructure as Code using Terraform
+* Event-driven self-healing design
+* Automated failure detection and recovery
+* CI/CD for infrastructure
+* Production-style repository structure
+
+
